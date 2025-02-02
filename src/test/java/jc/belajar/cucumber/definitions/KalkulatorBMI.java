@@ -1,5 +1,6 @@
 package jc.belajar.cucumber.definitions;
 
+import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -29,9 +30,8 @@ public class KalkulatorBMI {
         this.bmi = this.weight/(this.height*this.height);
 
         DecimalFormat decfor = new DecimalFormat("0.00");
-
-        decfor.format(this.bmi);
         decfor.setRoundingMode(RoundingMode.HALF_EVEN);
+        this.bmi= Float.parseFloat(decfor.format(this.bmi));
 
         if (this.bmi<18.5){
             this.category="Underweight";
@@ -53,7 +53,13 @@ public class KalkulatorBMI {
         Assert.assertEquals(bmi, expectedBMI);
     }
 
-    @And("saya mendapatkan kategori \"{String}\"")
+    @ParameterType(".*") // Mencocokkan semua teks
+    public String stringValue(String arg) {
+        return arg.substring(1, arg.length() - 1); // Menghapus tanda kutip
+    }
+
+
+    @And("saya mendapatkan kategori {stringValue}")
     public void resultCategory(String expectedCategory) {
         Assert.assertEquals(category, expectedCategory);
     }
